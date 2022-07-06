@@ -27,22 +27,25 @@
         <button id="addNewAccButton">Add new account</button>
       </form>
       <form action="">
-        New Transaction: Deposit
-        <input type="radio" />
-        Withdraw
-        <input type="radio" />
+        New Transaction: 
+        Deposit
+        <input type="radio" name="radioButton" value="deposit" id="radioDep"/>
+        Withdrawal
+        <input type="radio" name="radioButton" value="withdrawal" id="radioWith"/>
         Transfer
-        <input type="radio" />
-        Account:
-        <select></select>
+        <input type="radio" name="radioButton" value="transfer" id="radioTransfer"/>
+        <div class="AccForm"> Account:
+        <select class="selectAcc" ></select>
+      </div>
 
-        From:
-        <select></select>
+        <div class="hideFromToForms">From:
+        <select class="selectAcc" id="fromButton" required></select>
 
         To:
-        <select></select>
+        <select class="selectAcc" id="toButton" required></select>
+      </div>
         Category:
-        <select id="selectCat">
+        <select id="selectCat" required>
           <option id="Add-new-option" value="Add-new">Add new</option>
         </select>
         <input id="addNewCatInput" type="text" />
@@ -52,15 +55,15 @@
         <input type="text" />
 
         Amount:
-        <input type="number" />
+        <input id="amountInput" type="number" required/>
 
-        <button>Add transaction</button>
+        <button id="addNewTransactionButton">Add transaction</button>
       </form>
 
       Account summary
       <ul></ul>
       Filter by account:
-      <select></select>
+      <select class="selectAcc"></select>
       <table>
         <tr>
           <th>Id</th>

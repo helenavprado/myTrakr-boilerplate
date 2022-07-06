@@ -9,7 +9,10 @@ $(() => {
 
 $("#addNewAccButton").on("click",(e) => addNewAcc(e))
 $("#addNewCatButton").on("click",(e) => addNewCategory(e))
+//$("#addNewTransactionButton").on("click",(e) => addNewTransaction(e))
 });
+
+
 
 
 

@@ -76,7 +76,7 @@ export function addNewCategory(e) {
     return
     }
     const newCategory = new Category(newCatInput);
-    addOption(newCatInput);
+    
     $.ajax({
     method: 'post',
     data: JSON.stringify({newCategory}) ,
@@ -89,6 +89,7 @@ export function addNewCategory(e) {
     categories.push(data);
     $("#addNewCatInput").val('')
     hideButton()
+    addOption(newCatInput);
 
     });
 }

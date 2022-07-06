@@ -48,6 +48,11 @@ function validateNewAcc (name) {
   return true
 }
 
+function addAccOption(param) {
+  $('.selectAcc')
+  .prepend($('<option>').val(param).text(param));
+}
+
 export function addNewAcc(e) {
   e.preventDefault()
   let newAccInput = $("#newAccInput").val();
@@ -67,6 +72,7 @@ export function addNewAcc(e) {
     console.log('data ajax post', data);
     accounts.push(data);
     $("#newAccInput").val('')
+    addAccOption(newAccInput);
   });
 }
 

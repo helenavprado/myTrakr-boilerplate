@@ -22,4 +22,50 @@ class Deposit extends Transaction {
   }
 }
 
+function showSelectButton () {
+  $(".hideFromToForms").show();
+  $(".AccForm").hide()
+}
 
+function hideSelectButton () {
+  $(".hideFromToForms").hide();
+  $(".AccForm").show()
+}
+
+function validateTransaction() {
+  if ($("#amountInput").val() <= 0) {
+    return false;
+  } 
+
+  if ($("#fromButton").val() === $("#toButton").val()) {
+    return false;
+  }
+}
+
+
+function hideShowSelectButton () {
+  let radioValue = $("input[type='radio']:checked").val();
+  if (radioValue === "deposit" || radioValue === "withdrawal") {
+    hideSelectButton();
+  } else {
+    showSelectButton();
+  }
+} 
+
+$("input[type='radio']").on("change", hideShowSelectButton)
+
+
+
+
+class Transfer extends Transaction {
+  constructor(amount, account, accountIdFrom, accountIdTo) {
+    super(amount, account);
+    this.accountIdFrom = accountIdFrom;
+    this.accountIdTo = accountIdTo;
+  }
+}
+
+// export function addNewTransaction(e) {
+//   e.preventDefault()
+   
+// }
