@@ -15,9 +15,10 @@ $.ajax({
     url: 'http://localhost:3000/categories',
     dataType: 'json',
 }).done((data) => {
-    console.log('data ajax get', data);
+    console.log('data ajax cat get', data);
     data.forEach(category => {
     categories.push(category);
+    addOption(category.name.categoryName);
     })
 });
 
@@ -53,7 +54,7 @@ function showButton() {
 }
 
 
-$("#selectCat").on("change", function() {
+$(".selectCat").on("change", function() {
     let banana = $(this).val();
     if (banana === "Add-new") {
     showButton()
@@ -63,7 +64,7 @@ $("#selectCat").on("change", function() {
 });
 
 function addOption(param) {
-    $('#selectCat')
+    $('.selectCat')
     .prepend($('<option>').val(param).text(param));
 }
 

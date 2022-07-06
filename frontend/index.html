@@ -45,14 +45,14 @@
         <select class="selectAcc" id="toButton" required></select>
       </div>
         Category:
-        <select id="selectCat" required>
+        <select class="selectCat" required>
           <option id="Add-new-option" value="Add-new">Add new</option>
         </select>
         <input id="addNewCatInput" type="text" />
         <button type="button" id="addNewCatButton">Add new category</button>
 
         Description
-        <input type="text" />
+        <input type="text" id="description" />
 
         Amount:
         <input id="amountInput" type="number" required/>
@@ -63,7 +63,13 @@
       Account summary
       <ul></ul>
       Filter by account:
-      <select class="selectAcc"></select>
+      <select class="filterAcc">
+        <option id="allAcc" value="allAcc">All</option>
+      </select>
+      Filter by category:
+      <select class="selectCat" id="filterAcc">
+        <option id="allCat" value="allCat">All</option>
+      </select>
       <table>
         <tr>
           <th>Id</th>

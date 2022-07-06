@@ -27,11 +27,23 @@ function getAcc() {
     console.log('data ajax get', data);
     data.forEach(account => {
       accounts.push(account);
+      addAccOption(account);
     })
   });
   
 }
 getAcc()
+
+
+
+//WORKING HERE
+
+
+export function findFunction (transaction) {
+  const acc = accounts.find(account => {return account.id == transaction.accountId})
+  acc.transactions.push(transaction)
+}
+
 
 // validate
 function validateNewAcc (name) {
@@ -49,7 +61,6 @@ function validateNewAcc (name) {
 }
 
 function addAccOption(param) {
-  console.log(param)
   $('.selectAcc')
   .prepend($('<option>').val(param.id).text(param.username));
 }
@@ -77,5 +88,6 @@ export function addNewAcc(e) {
   });
 }
 
-export default {addNewAcc}
+export default {addNewAcc, findFunction}
+
 
