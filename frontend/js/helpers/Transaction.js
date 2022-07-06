@@ -1,7 +1,7 @@
 class Transaction {
-  constructor(amount, account) {
+  constructor(amount, accountId) {
     this.amount = amount;
-    this.account = account;
+    this.accountId = accountId;
   }
   commit() {
     if (this.value < 0 && this.amount > this.account.balance) return;
@@ -37,9 +37,18 @@ function validateTransaction() {
     return false;
   } 
 
-  if ($("#fromButton").val() === $("#toButton").val()) {
+  if ($("#selectCat").val() === "Add-new") {
     return false;
+  } 
+
+  console.log($("#fromButton").val());
+  console.log($("#toButton").val());
+  if ($("input[type='radio']:checked").val() === "transfer") {
+    if ($("#fromButton").val() === $("#toButton").val()) {
+      return false;
+    }
   }
+  return true;
 }
 
 
@@ -55,6 +64,9 @@ function hideShowSelectButton () {
 $("input[type='radio']").on("change", hideShowSelectButton)
 
 
+let catInput = $("#selectCat").val();
+let transactionType = $("input[type='radio']:checked").val();
+
 
 
 class Transfer extends Transaction {
@@ -65,7 +77,26 @@ class Transfer extends Transaction {
   }
 }
 
-// export function addNewTransaction(e) {
-//   e.preventDefault()
-   
-// }
+export function addNewTransaction(e) {
+  e.preventDefault()
+  if(!validateTransaction()) {
+    alert("please review your transaction inputs");
+    return 
+  }
+
+  let account = $("#selectAccID").val();
+  let amountInput = $("#amountInput").val();
+  const newTransaction = new Transaction(amountInput, account);
+
+  console.log(newTransaction);
+  $.ajax({
+    method: 'post',
+    data: JSON.stringify({newTransaction}) ,
+    url: 'http://localhost:3000/transaction',
+    dataType: 'json',
+    contentType: "application/json"
+    }).done((data) => {
+    console.log('data ajax post', data);
+    });
+
+  }

@@ -1,5 +1,6 @@
 import {addNewAcc} from "./helpers/Account.js"
 import {addNewCategory} from "./helpers/Category.js"
+import {addNewTransaction} from "./helpers/Transaction.js"
 $(() => { 
   //Start coding here!
 
@@ -9,7 +10,7 @@ $(() => {
 
 $("#addNewAccButton").on("click",(e) => addNewAcc(e))
 $("#addNewCatButton").on("click",(e) => addNewCategory(e))
-//$("#addNewTransactionButton").on("click",(e) => addNewTransaction(e))
+$("#addNewTransactionButton").on("click",(e) => addNewTransaction(e))
 });
 
 

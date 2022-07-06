@@ -49,8 +49,9 @@ function validateNewAcc (name) {
 }
 
 function addAccOption(param) {
+  console.log(param)
   $('.selectAcc')
-  .prepend($('<option>').val(param).text(param));
+  .prepend($('<option>').val(param.id).text(param.username));
 }
 
 export function addNewAcc(e) {
@@ -72,7 +73,7 @@ export function addNewAcc(e) {
     console.log('data ajax post', data);
     accounts.push(data);
     $("#newAccInput").val('')
-    addAccOption(newAccInput);
+    addAccOption(data);
   });
 }
 
