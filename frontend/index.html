@@ -34,11 +34,13 @@
         <input type="radio" name="radioButton" value="withdrawal" id="radioWith"/>
         Transfer
         <input type="radio" name="radioButton" value="transfer" id="radioTransfer"/>
-        <div class="AccForm"> Account:
+        <div class="AccForm"> 
+        Account:
         <select id="selectAccID"class="selectAcc" ></select>
       </div>
 
-        <div class="hideFromToForms">From:
+        <div class="hideFromToForms">
+        From:
         <select class="selectAcc" id="fromButton" required></select>
 
         To:
@@ -61,22 +63,24 @@
       </form>
 
       Account summary
-      <ul></ul>
+      <ul id="accSummary">
+
+      </ul>
       Filter by account:
-      <select class="filterAcc">
+      <select class="selectAcc">
         <option id="allAcc" value="allAcc">All</option>
       </select>
       Filter by category:
-      <select class="selectCat" id="filterAcc">
+      <select class="selectCat" id="filterCat">
         <option id="allCat" value="allCat">All</option>
       </select>
-      <table>
+      <table id="transactionTable">
         <tr>
           <th>Id</th>
           <th>Username</th>
-          <th>Transaction Type</th>
+          <th> Transaction Type</th>
           <th>Category</th>
-          <th>Description</th>
+          <th> Description</th>
           <th>Amount</th>
           <th>From</th>
           <th>To</th>

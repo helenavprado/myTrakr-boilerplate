@@ -11,6 +11,14 @@ class Transaction {
   }
 }
 
+export function convertTransaction (transaction){
+if (transaction.transactionType == "deposit"){
+  return new Deposit(Number(transaction.amount))
+} else if (transaction.transactionType == "withdrawal"){
+  return new Withdrawal(Number(transaction.amount))
+}
+}
+
 class Withdrawal extends Transaction {
   get value() {
     return -this.amount;
@@ -22,6 +30,39 @@ class Deposit extends Transaction {
     return this.amount;
   }
 }
+
+class Transfer extends Transaction {
+  constructor(amount, account, accountIdFrom, accountIdTo) {
+    super(amount, account);
+    this.accountIdFrom = accountIdFrom;
+    this.accountIdTo = accountIdTo;
+  }
+
+  transferMoney(amount) {
+    this.amount = amount;
+    if (this.amount < this.account.balance) {
+      return false;
+    }
+  }
+  
+}
+
+
+// function getAllTransactions() {
+// $.ajax({
+// method: 'get',
+// url: 'http://localhost:3000/transactions',
+// dataType: 'json',
+// }).done((data) => {
+// console.log('data ajax trans get', data);
+//     data.forEach(transaction => { 
+//       findFunction(transaction);
+//     })
+//     addToTable();
+//   })
+// };
+  
+// getAllTransactions()
 
 function showSelectButton () {
   $(".hideFromToForms").show();
@@ -42,8 +83,6 @@ function validateTransaction() {
     return false;
   } 
 
-  console.log($("#fromButton").val());
-  console.log($("#toButton").val());
   if ($("input[type='radio']:checked").val() === "transfer") {
     if ($("#fromButton").val() === $("#toButton").val()) {
       return false;
@@ -62,18 +101,8 @@ function hideShowSelectButton () {
   }
 } 
 
-$("input[type='radio']").on("change", hideShowSelectButton)
+$("input[type='radio']").on("change", hideShowSelectButton);
 
-
-class Transfer extends Transaction {
-  constructor(amount, account, accountIdFrom, accountIdTo) {
-    super(amount, account);
-    this.accountIdFrom = accountIdFrom;
-    this.accountIdTo = accountIdTo;
-  }
-}
-
-let transactionList = []
 
 export function addNewTransaction(e) {
   e.preventDefault()
@@ -89,6 +118,7 @@ export function addNewTransaction(e) {
   let description = $("#description").val();
   let accountIdFrom = $("#fromButton").val();
   let accountIdTo = $("#toButton").val();
+
     
   const newTransaction = {
     accountId,
@@ -99,6 +129,20 @@ export function addNewTransaction(e) {
     accountIdFrom,
     accountIdTo,
   };
+
+  function addToTable () {
+    let table = $("#transactionTable");
+    table.append($("<tr>")
+    .append($("<td>").append(accountId))
+    .append($("<td>").append($("#selectAccID")))
+    .append($("<td>").append(transactionType))
+    .append($("<td>").append(catInput))
+    .append($("<td>").append(description))
+    .append($("<td>").append(amountInput))
+    .append($("<td>").append($("#fromButton")))
+    .append($("<td>").append($("#toButton")))
+    )
+  }
 
   console.log(newTransaction);
   $.ajax({
@@ -112,6 +156,7 @@ export function addNewTransaction(e) {
     data.forEach(transaction => { 
       findFunction(transaction);
     })
+    addToTable();
     });
 
   }

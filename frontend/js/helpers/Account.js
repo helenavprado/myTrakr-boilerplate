@@ -1,14 +1,18 @@
+import {convertTransaction} from "./Transaction.js"
+
+
 class Account {
-  constructor(username) {
+  constructor(username,transactions) {
     this.username = username;
-    this.transactions = [];
+    this.transactions = transactions;
   }
 
   
 
   get balance() {
     return this.transactions.reduce((total, transaction) => {
-      return total + transaction;
+      console.log(transaction)
+      return total + transaction.value;
     }, 0);
   }
 
@@ -26,22 +30,31 @@ function getAcc() {
   }).done((data) => {
     console.log('data ajax get', data);
     data.forEach(account => {
+    let newTransactions = account.transactions.map(transaction => {
+      return convertTransaction(transaction)
+      })
+      let newAccount = new Account(account.username, newTransactions);
+      console.log(newAccount);
       accounts.push(account);
       addAccOption(account);
+      accSummary(newAccount);
     })
   });
   
 }
 getAcc()
 
-
-
-//WORKING HERE
-
-
 export function findFunction (transaction) {
   const acc = accounts.find(account => {return account.id == transaction.accountId})
   acc.transactions.push(transaction)
+}
+
+function accSummary (account) {
+  let newAccInput = account.username;
+  let accBalance = account.balance;
+  let listSummary = $("#accSummary");
+  let space = " $"
+  listSummary.append($("<li>").append(newAccInput, space, accBalance))
 }
 
 
@@ -72,8 +85,7 @@ export function addNewAcc(e) {
     alert('invalid account name');
     return
   }
-  const newAccount = new Account(newAccInput);
-    console.log('new acc',newAccount)
+  const newAccount = {username: newAccInput, transactions: []}
   $.ajax({
     method: 'post',
     data: JSON.stringify({newAccount}) ,
@@ -81,10 +93,13 @@ export function addNewAcc(e) {
     dataType: 'json',
     contentType: "application/json"
   }).done((data) => {
+    const newAccountFromData = new Account(data.username,data.transactions);
+    console.log('new acc',newAccountFromData)
     console.log('data ajax post', data);
     accounts.push(data);
     $("#newAccInput").val('')
     addAccOption(data);
+    accSummary(newAccountFromData);
   });
 }
 
