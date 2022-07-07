@@ -11,7 +11,6 @@ class Account {
 
   get balance() {
     return this.transactions.reduce((total, transaction) => {
-      console.log(transaction)
       return total + transaction.value;
     }, 0);
   }
@@ -22,19 +21,19 @@ const accounts = [];
 
 //get acct
 
-function getAcc() {
+export function getAcc() {
   $.ajax({
     method: 'get',
     url: 'http://localhost:3000/accounts',
     dataType: 'json',
   }).done((data) => {
-    console.log('data ajax get', data);
     data.forEach(account => {
     let newTransactions = account.transactions.map(transaction => {
-      return convertTransaction(transaction)
-      })
+      const convertedTransaction = convertTransaction(transaction)
+      return convertedTransaction
+    })
       let newAccount = new Account(account.username, newTransactions);
-      console.log(newAccount);
+      
       accounts.push(account);
       addAccOption(account);
       accSummary(newAccount);
@@ -45,7 +44,10 @@ function getAcc() {
 getAcc()
 
 export function findFunction (transaction) {
-  const acc = accounts.find(account => {return account.id == transaction.accountId})
+
+  const acc = accounts.find(account => {
+    return account.id == transaction.accountId
+  })
   acc.transactions.push(transaction)
 }
 
@@ -94,8 +96,6 @@ export function addNewAcc(e) {
     contentType: "application/json"
   }).done((data) => {
     const newAccountFromData = new Account(data.username,data.transactions);
-    console.log('new acc',newAccountFromData)
-    console.log('data ajax post', data);
     accounts.push(data);
     $("#newAccInput").val('')
     addAccOption(data);
@@ -103,6 +103,6 @@ export function addNewAcc(e) {
   });
 }
 
-export default {addNewAcc, findFunction}
+export default {addNewAcc, findFunction, getAcc}
 
 

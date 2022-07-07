@@ -27,8 +27,6 @@ getCategory()
 
 //validate
 function validateNewCategory (name) {
-    console.log(categories);
-    console.log(name);
 
 if(!name) return false;
 if(categories.length > 0){

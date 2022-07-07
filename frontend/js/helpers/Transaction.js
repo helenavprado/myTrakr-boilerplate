@@ -13,9 +13,11 @@ class Transaction {
 
 export function convertTransaction (transaction){
 if (transaction.transactionType == "deposit"){
-  return new Deposit(Number(transaction.amount))
+  return new Deposit(Number(transaction.amount, transaction.account))
 } else if (transaction.transactionType == "withdrawal"){
-  return new Withdrawal(Number(transaction.amount))
+  return new Withdrawal(Number(transaction.amount, transaction.account))
+} else if (transaction.transactionType == "transfer") {
+  return new Transfer (Number(transaction.amount, transaction.account, transaction.accountIdFrom, transaction.accountIdTo))
 }
 }
 
@@ -47,22 +49,40 @@ class Transfer extends Transaction {
   
 }
 
+function addToTable (param) {
+  let table = $("#transactionTable");
+  table.append($("<tr>")
+  .append($("<td>").append(param.accountId))
+  .append($("<td>").append($("#selectAccID")))
+  .append($("<td>").append(param.transactionType))
+  .append($("<td>").append(param.catInput))
+  .append($("<td>").append(param.description))
+  .append($("<td>").append(param.amountInput))
+  .append($("<td>").append($("#fromButton")))
+  .append($("<td>").append($("#toButton")))
+  )
+}
 
-// function getAllTransactions() {
-// $.ajax({
-// method: 'get',
-// url: 'http://localhost:3000/transactions',
-// dataType: 'json',
-// }).done((data) => {
-// console.log('data ajax trans get', data);
-//     data.forEach(transaction => { 
-//       findFunction(transaction);
-//     })
-//     addToTable();
-//   })
-// };
+
+export function getAllTransactions() {
+$.ajax({
+method: 'get',
+url: 'http://localhost:3000/transactions',
+dataType: 'json',
+}).done((data) => {
+const newTransacao = new Transaction(data.amount, data.account, data.accountIdFrom, data.accountIdTo);
+console.log('data ajax trans get', data);
+    data.forEach(accountTransaction => {
+      accountTransaction.forEach(transaction => {
+        findFunction(transaction);
+        addToTable(transaction);
+      })
+    })
+    
+  })
+};
   
-// getAllTransactions()
+
 
 function showSelectButton () {
   $(".hideFromToForms").show();
@@ -130,21 +150,6 @@ export function addNewTransaction(e) {
     accountIdTo,
   };
 
-  function addToTable () {
-    let table = $("#transactionTable");
-    table.append($("<tr>")
-    .append($("<td>").append(accountId))
-    .append($("<td>").append($("#selectAccID")))
-    .append($("<td>").append(transactionType))
-    .append($("<td>").append(catInput))
-    .append($("<td>").append(description))
-    .append($("<td>").append(amountInput))
-    .append($("<td>").append($("#fromButton")))
-    .append($("<td>").append($("#toButton")))
-    )
-  }
-
-  console.log(newTransaction);
   $.ajax({
     method: 'post',
     data: JSON.stringify({newTransaction}) ,
@@ -158,6 +163,6 @@ export function addNewTransaction(e) {
     })
     addToTable();
     });
-
   }
 
+export default {getAllTransactions}
