@@ -11,10 +11,14 @@ class Account {
   
 
   get balance() {
-    
+    let lastTransactionOnTheList = this.transactions[this.transactions.length-1]
     return this.transactions.reduce((total, transaction) => {
-      // console.log(transaction);
-      return total + transaction.value;
+      if (!transaction.value) {
+        return total - parseInt(lastTransactionOnTheList.amount);
+      } else {
+        return total + transaction.value;
+      }
+      
     }, 0);
   }
 
@@ -39,6 +43,7 @@ export function getAcc() {
       
       accounts.push(account);
       addAccOption(account);
+      console.log(newAccount);
       accSummary(newAccount);
     })
   });
@@ -52,12 +57,13 @@ export function findFunction (transaction) {
 }
 
 function accSummary (account) {
-  console.log(account);
   let newAccInput = account.username;
   let accBalance = account.balance;
   let listSummary = $("#accSummary");
-  
-  listSummary.append($(`<li id=${account.username}>`).append(`${newAccInput}: $ <span>${accBalance}</span>`))
+  let variavel =  "<li id=" + account.username + ">" + newAccInput + ": $ <span>" + accBalance + "</span>";
+  $(`#${account.username}`).remove();
+  listSummary.append(variavel)
+  console.log(listSummary);
 }
 
 
@@ -71,7 +77,7 @@ function validateNewAcc (name) {
         exists = true;
       }
     })
-    if(exists)return false;
+    if(exists)return false; 
   }
   return true
 }
@@ -100,6 +106,7 @@ export function addNewAcc(e) {
     accounts.push(data);
     $("#newAccInput").val('')
     addAccOption(data);
+    console.log(newAccountFromData);
     accSummary(newAccountFromData);
   });
 }

@@ -12,7 +12,6 @@ class Transaction {
 }
 
 export function convertTransaction (transaction){
-  console.log(transaction);
 if (transaction.transactionType == "deposit"){
   return new Deposit(transaction.amountInput, transaction.account)
 } else if (transaction.transactionType == "withdrawal"){
@@ -170,12 +169,13 @@ export function addNewTransaction(e) {
       findFunction(transaction);
       addToTable(transaction);
       let account = getAccountById(transaction.accountId);
-      const balanceElement = $(`#${account.username} span`);
-      balanceElement.text(Number(balanceElement.text()) + newTransaction.value)
-      console.log(account);
+      console.log(account.username);
+      const balanceElement = $(`#${account.username} li`);
+      console.log(balanceElement);
+      balanceElement.text(Number(balanceElement.text()) + transaction.amountInput);
+      console.log(Number(balanceElement.text()));
+      //console.log(account);
     })
-  
-    2
     });
   }
 
