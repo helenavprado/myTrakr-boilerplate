@@ -1,6 +1,7 @@
 import {convertTransaction} from "./Transaction.js"
 
 
+
 class Account {
   constructor(username,transactions) {
     this.username = username;
@@ -10,7 +11,9 @@ class Account {
   
 
   get balance() {
+    
     return this.transactions.reduce((total, transaction) => {
+      // console.log(transaction);
       return total + transaction.value;
     }, 0);
   }
@@ -44,19 +47,17 @@ export function getAcc() {
 getAcc()
 
 export function findFunction (transaction) {
-
-  const acc = accounts.find(account => {
-    return account.id == transaction.accountId
-  })
+  const acc = getAccountById(transaction.accountId)
   acc.transactions.push(transaction)
 }
 
 function accSummary (account) {
+  console.log(account);
   let newAccInput = account.username;
   let accBalance = account.balance;
   let listSummary = $("#accSummary");
-  let space = " $"
-  listSummary.append($("<li>").append(newAccInput, space, accBalance))
+  
+  listSummary.append($(`<li id=${account.username}>`).append(`${newAccInput}: $ <span>${accBalance}</span>`))
 }
 
 
@@ -103,6 +104,14 @@ export function addNewAcc(e) {
   });
 }
 
-export default {addNewAcc, findFunction, getAcc}
+export function getAccountById(id){
+  const acc = accounts.find(account => {
+    return account.id == id;
+  })
+  return acc;
+}
+
+
+export default {addNewAcc, findFunction, getAcc, getAccountById}
 
 

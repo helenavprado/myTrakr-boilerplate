@@ -1,4 +1,4 @@
-import { findFunction } from "./Account.js";
+import { findFunction, getAccountById } from "./Account.js";
 class Transaction {
   constructor(amount, accountId) {
     this.amount = amount;
@@ -12,25 +12,28 @@ class Transaction {
 }
 
 export function convertTransaction (transaction){
+  console.log(transaction);
 if (transaction.transactionType == "deposit"){
-  return new Deposit(Number(transaction.amount, transaction.account))
+  return new Deposit(transaction.amountInput, transaction.account)
 } else if (transaction.transactionType == "withdrawal"){
-  return new Withdrawal(Number(transaction.amount, transaction.account))
+  return new Withdrawal(transaction.amountInput, transaction.account)
 } else if (transaction.transactionType == "transfer") {
-  return new Transfer (Number(transaction.amount, transaction.account, transaction.accountIdFrom, transaction.accountIdTo))
+  return new Transfer (transaction.amountInput, transaction.account, transaction.accountIdFrom, transaction.accountIdTo)
 }
 }
 
 class Withdrawal extends Transaction {
   get value() {
-    return -this.amount;
+    return -Number(this.amount);
   }
 }
 
 class Deposit extends Transaction {
   get value() {
-    return this.amount;
+    return Number(this.amount);
   }
+
+
 }
 
 class Transfer extends Transaction {
@@ -49,18 +52,23 @@ class Transfer extends Transaction {
   
 }
 
-function addToTable (param) {
+
+
+function addToTable (transaction) {
+  // console.log(transaction);
   let table = $("#transactionTable");
+
+  
   table.append($("<tr>")
-  .append($("<td>").append(param.accountId))
-  .append($("<td>").append($("#selectAccID")))
-  .append($("<td>").append(param.transactionType))
-  .append($("<td>").append(param.catInput))
-  .append($("<td>").append(param.description))
-  .append($("<td>").append(param.amountInput))
-  .append($("<td>").append($("#fromButton")))
-  .append($("<td>").append($("#toButton")))
-  )
+  .append($("<td>").append(transaction.id))
+  .append($("<td>").append(getAccountById(transaction.accountId).username))
+  .append($("<td>").append(transaction.transactionType))
+  .append($("<td>").append(transaction.catInput))
+  .append($("<td>").append(transaction.description))
+  .append($("<td>").append(transaction.amountInput))
+  .append($("<td>").append(getAccountById(transaction.accountIdFrom).username))
+  .append($("<td>").append(getAccountById(transaction.accountIdTo).username)))
+  
 }
 
 
@@ -70,12 +78,11 @@ method: 'get',
 url: 'http://localhost:3000/transactions',
 dataType: 'json',
 }).done((data) => {
-const newTransacao = new Transaction(data.amount, data.account, data.accountIdFrom, data.accountIdTo);
 console.log('data ajax trans get', data);
     data.forEach(accountTransaction => {
       accountTransaction.forEach(transaction => {
-        findFunction(transaction);
-        addToTable(transaction);
+        addToTable(transaction)
+        // findFunction(transaction);
       })
     })
     
@@ -126,11 +133,6 @@ $("input[type='radio']").on("change", hideShowSelectButton);
 
 export function addNewTransaction(e) {
   e.preventDefault()
-  if(!validateTransaction()) {
-    alert("please review your transaction inputs");
-    return 
-  }
-
   let accountId = $("#selectAccID").val();
   let amountInput = $("#amountInput").val();
   let catInput = $(".selectCat").val();
@@ -138,6 +140,11 @@ export function addNewTransaction(e) {
   let description = $("#description").val();
   let accountIdFrom = $("#fromButton").val();
   let accountIdTo = $("#toButton").val();
+  
+  if(!validateTransaction()) {
+    alert("please review your transaction inputs");
+    return 
+  }
 
     
   const newTransaction = {
@@ -159,9 +166,16 @@ export function addNewTransaction(e) {
     }).done((data) => {
     console.log('data ajax post', data);
     data.forEach(transaction => { 
+      let newTransaction = convertTransaction(transaction);
       findFunction(transaction);
+      addToTable(transaction);
+      let account = getAccountById(transaction.accountId);
+      const balanceElement = $(`#${account.username} span`);
+      balanceElement.text(Number(balanceElement.text()) + newTransaction.value)
+      console.log(account);
     })
-    addToTable();
+  
+    2
     });
   }
 
