@@ -11,13 +11,14 @@ class Transaction {
   }
 }
 
+hideSelectButton();
 export function convertTransaction (transaction){
 if (transaction.transactionType == "deposit"){
   return new Deposit(transaction.amountInput, transaction.account)
 } else if (transaction.transactionType == "withdrawal"){
   return new Withdrawal(transaction.amountInput, transaction.account)
 } else if (transaction.transactionType == "transfer") {
-  return new Transfer (transaction.amountInput, transaction.account, transaction.accountIdFrom, transaction.accountIdTo)
+  return new Transfer (transaction.amountInput, transaction.accountId, transaction.accountIdFrom, transaction.accountIdTo)
 }
 }
 
@@ -36,8 +37,8 @@ class Deposit extends Transaction {
 }
 
 class Transfer extends Transaction {
-  constructor(amount, account, accountIdFrom, accountIdTo) {
-    super(amount, account);
+  constructor(amount, accountId, accountIdFrom, accountIdTo) {
+    super(amount, accountId);
     this.accountIdFrom = accountIdFrom;
     this.accountIdTo = accountIdTo;
   }
@@ -48,16 +49,24 @@ class Transfer extends Transaction {
       return false;
     }
   }
-  
+  get value() {
+    if (this.accountId == this.accountIdFrom){
+
+      return -Number(this.amount);
+    } else if (this.accountId == this.accountIdTo){
+
+    return Number(this.amount);
+  }
+
+} 
 }
 
 
 
-function addToTable (transaction) {
-  // console.log(transaction);
-  let table = $("#transactionTable");
 
-  
+
+function addToTable (transaction) {
+  let table = $("#transactionTable");
   table.append($("<tr>")
   .append($("<td>").append(transaction.id))
   .append($("<td>").append(getAccountById(transaction.accountId).username))
@@ -77,7 +86,6 @@ method: 'get',
 url: 'http://localhost:3000/transactions',
 dataType: 'json',
 }).done((data) => {
-console.log('data ajax trans get', data);
     data.forEach(accountTransaction => {
       accountTransaction.forEach(transaction => {
         addToTable(transaction)
@@ -101,6 +109,14 @@ function hideSelectButton () {
 }
 
 function validateTransaction() {
+  let account;
+  if($("input[type='radio']:checked").val() =="transfer"){
+    account = getAccountById($("#fromButton").val())
+
+  }else{
+    account = getAccountById($("#selectAccID").val())
+  }
+  
   if ($("#amountInput").val() <= 0) {
     return false;
   } 
@@ -114,6 +130,21 @@ function validateTransaction() {
       return false;
     }
   }
+
+  if ($("input[type='radio']:checked").val() === "transfer") {
+    if(account.balance < $("#amountInput").val()){
+      alert("Insuficient funds");
+      return false;
+    }
+  }
+
+  if ($("input[type='radio']:checked").val() === "withdrawal") {
+    if( account.balance < $("#amountInput").val()){
+      alert("Insuficient funds");
+      return false;
+    }
+  }
+
   return true;
 }
 
@@ -163,18 +194,14 @@ export function addNewTransaction(e) {
     dataType: 'json',
     contentType: "application/json"
     }).done((data) => {
-    console.log('data ajax post', data);
     data.forEach(transaction => { 
       let newTransaction = convertTransaction(transaction);
       findFunction(transaction);
       addToTable(transaction);
       let account = getAccountById(transaction.accountId);
-      console.log(account.username);
-      const balanceElement = $(`#${account.username} li`);
-      console.log(balanceElement);
-      balanceElement.text(Number(balanceElement.text()) + transaction.amountInput);
-      console.log(Number(balanceElement.text()));
-      //console.log(account);
+      const balanceElement = $(`li#${account.username} span`);
+      balanceElement.text(Number(balanceElement.text()) + newTransaction.value);
+      
     })
     });
   }

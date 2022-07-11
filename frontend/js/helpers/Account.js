@@ -3,9 +3,10 @@ import {convertTransaction} from "./Transaction.js"
 
 
 class Account {
-  constructor(username,transactions) {
+  constructor(username,transactions, id) {
     this.username = username;
     this.transactions = transactions;
+    this.id = id
   }
 
   
@@ -26,7 +27,6 @@ class Account {
 
 const accounts = [];
 
-//get acct
 
 export function getAcc() {
   $.ajax({
@@ -39,17 +39,15 @@ export function getAcc() {
       const convertedTransaction = convertTransaction(transaction)
       return convertedTransaction
     })
-      let newAccount = new Account(account.username, newTransactions);
+      let newAccount = new Account(account.username, newTransactions, account.id);
       
-      accounts.push(account);
+      accounts.push(newAccount);
       addAccOption(account);
-      console.log(newAccount);
       accSummary(newAccount);
     })
   });
   
 }
-getAcc()
 
 export function findFunction (transaction) {
   const acc = getAccountById(transaction.accountId)
@@ -63,7 +61,6 @@ function accSummary (account) {
   let variavel =  "<li id=" + account.username + ">" + newAccInput + ": $ <span>" + accBalance + "</span>";
   $(`#${account.username}`).remove();
   listSummary.append(variavel)
-  console.log(listSummary);
 }
 
 
@@ -82,10 +79,15 @@ function validateNewAcc (name) {
   return true
 }
 
-function addAccOption(param) {
+  function addAccOption(param) {
   $('.selectAcc')
   .prepend($('<option>').val(param.id).text(param.username));
 }
+
+function filterAcc(){
+  
+}
+console.log(accounts);
 
 export function addNewAcc(e) {
   e.preventDefault()
@@ -102,15 +104,13 @@ export function addNewAcc(e) {
     dataType: 'json',
     contentType: "application/json"
   }).done((data) => {
-    const newAccountFromData = new Account(data.username,data.transactions);
-    accounts.push(data);
+    const newAccountFromData = new Account(data.username,data.transactions, data.id);
+    accounts.push(newAccountFromData);
     $("#newAccInput").val('')
     addAccOption(data);
-    console.log(newAccountFromData);
     accSummary(newAccountFromData);
   });
 }
-
 export function getAccountById(id){
   const acc = accounts.find(account => {
     return account.id == id;

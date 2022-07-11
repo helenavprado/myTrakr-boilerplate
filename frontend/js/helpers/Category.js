@@ -15,7 +15,7 @@ $.ajax({
     url: 'http://localhost:3000/categories',
     dataType: 'json',
 }).done((data) => {
-    console.log('data ajax cat get', data);
+ 
     data.forEach(category => {
     categories.push(category);
     addOption(category.name.categoryName);
@@ -84,7 +84,7 @@ export function addNewCategory(e) {
     dataType: 'json',
     contentType: "application/json"
     }).done((data) => {
-    console.log('data ajax post', data);
+ 
     categories.push(data);
     $("#addNewCatInput").val('')
     hideButton()
