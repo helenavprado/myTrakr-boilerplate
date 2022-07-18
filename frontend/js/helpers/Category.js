@@ -64,7 +64,11 @@ $(".selectCat").on("change", function() {
 function addOption(param) {
     $('.selectCat')
     .prepend($('<option>').val(param).text(param));
+    $('.filterCat')
+    .prepend($('<option>').val(param).text(param));
 }
+
+
 
 export function addNewCategory(e) {
     e.preventDefault()

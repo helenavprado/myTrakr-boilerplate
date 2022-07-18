@@ -67,17 +67,83 @@ class Transfer extends Transaction {
 
 function addToTable (transaction) {
   let table = $("#transactionTable");
-  table.append($("<tr>")
-  .append($("<td>").append(transaction.id))
-  .append($("<td>").append(getAccountById(transaction.accountId).username))
-  .append($("<td>").append(transaction.transactionType))
-  .append($("<td>").append(transaction.catInput))
-  .append($("<td>").append(transaction.description))
-  .append($("<td>").append(transaction.amountInput))
-  .append($("<td>").append(getAccountById(transaction.accountIdFrom).username))
-  .append($("<td>").append(getAccountById(transaction.accountIdTo).username)))
-  
+  let filteredAccounts = getAccountById(transaction.id);
+  console.log(filteredAccounts)
+  let accId = $("#AccountFilter").val();
+  let accCat = $(".filterCat").val();
+  console.log(accId);
+  console.log(accCat);  
+     table.append($("<tr>")
+    .append($("<td>").append(transaction.id))
+    .append($("<td>").append(getAccountById(transaction.accountId).username))
+    .append($("<td>").append(transaction.transactionType))
+    .append($("<td>").append(transaction.catInput))
+    .append($("<td>").append(transaction.description))
+    .append($("<td>").append(transaction.amountInput))
+    .append($("<td>").append(getAccountById(transaction.accountIdFrom).username))
+    .append($("<td>").append(getAccountById(transaction.accountIdTo).username)))
+    
 }
+
+$("#AccountFilter").on("change", function() {
+  let FilteredId = $(this).val();
+  let filteredAccounts = getAccountById(FilteredId);
+  let table = $("#transactionTable");
+  $("#transactionTable td").parent().remove();
+
+  console.log(filteredAccounts)
+  console.log(FilteredId);
+
+  if(FilteredId != "allAcc"){
+    
+    $("#transactionTable td").parent().remove();
+
+    table.append($("<tr>")
+   .append($("<td>").append(filteredAccounts.FilteredId))
+   .append($("<td>").append(filteredAccounts.username))
+   .append($("<td>").append(filteredAccounts.transactionType))
+   .append($("<td>").append(filteredAccounts.catInput))
+   .append($("<td>").append(filteredAccounts.description))
+   .append($("<td>").append(filteredAccounts.amountInput))
+   .append($("<td>").append(filteredAccounts.username))
+   .append($("<td>").append(filteredAccounts.username)))
+  }
+});
+
+
+$(".filterCat").on("change", function() {
+  
+  let FilteredId = $(this).val();
+  console.log(FilteredId);
+
+  if(FilteredId != "allCat"){
+
+    $("#transactionTable td").parent().remove();
+    filteredAccounts.transactions.forEach((filteredAccounts) => {
+    
+    table.append($("<tr>")
+    .append($("<td>").append(filteredAccounts.FilteredId))
+    .append($("<td>").append(filteredAccounts.username))
+    .append($("<td>").append(filteredAccounts.transactions))
+    .append($("<td>").append(filteredAccounts.catInput))
+    .append($("<td>").append(filteredAccounts.description))
+    .append($("<td>").append(filteredAccounts.transactions.amount))
+    .append($("<td>").append(filteredAccounts.username))
+    .append($("<td>").append(filteredAccounts.username)))
+    });
+
+    
+  }
+ 
+  
+});
+
+
+
+
+
+
+
 
 
 export function getAllTransactions() {
@@ -175,6 +241,7 @@ export function addNewTransaction(e) {
     alert("please review your transaction inputs");
     return 
   }
+
 
     
   const newTransaction = {

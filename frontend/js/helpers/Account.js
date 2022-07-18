@@ -8,7 +8,6 @@ class Account {
     this.transactions = transactions;
     this.id = id
   }
-
   
 
   get balance() {
@@ -82,11 +81,10 @@ function validateNewAcc (name) {
   function addAccOption(param) {
   $('.selectAcc')
   .prepend($('<option>').val(param.id).text(param.username));
-}
+  }
 
-function filterAcc(){
-  
-}
+
+
 console.log(accounts);
 
 export function addNewAcc(e) {
